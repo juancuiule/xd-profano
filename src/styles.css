@@ -1,0 +1,18 @@
+* {
+  --primary: #0069B4;
+  --secondary:#C39965;
+  --gray-1: #f5f5f5;
+  --gray-2: #eaeaea;
+  --gray-3: #c4c4c4;
+  --gray-4: #979797;
+  --error-color: #C39965;
+
+  --font-sans-serif: "IBM Plex Sans";
+  --font-serif: "Cormorant";
+
+}
+
+html,
+#root {
+  background: var(--gray-1);
+}
