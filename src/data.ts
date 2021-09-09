@@ -89,7 +89,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Longitud del camino",
       book: "Libro de la vida",
       bookText:
         "“...es imposible conocer el límite máximo de tiempo vivible para los humanos. Lo único que sabemos es que estas personas excepcionales que viven más de 110 años dificilmente llegan a los 120: ese parece ser un límite más o menos razonable.”"
@@ -131,7 +132,8 @@ const preSteps: PreStep[] = [
         condition: (state) => state["hijes-tenes"] === "0"
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Hijes",
       book: "Libro de la vida",
       bookText:
         "“...Si nacer es uno de los hitos centrales en las trayectorias de vida de los humanos, dar lugar a ese nacimiento —es decir, transitar el parto y lo que le sigue— no se queda muy atrás…”"
@@ -166,7 +168,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Punto de partida",
       book: "Libro de la vida",
       bookText:
         "“...el problema, más que por la definición del inicio de la vida, podía ser abordado en términos del estatus de un embrión o feto frente al de una persona, es decir, un ser humano.”"
@@ -187,7 +190,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Quién da estos pasos",
       book: "Libro de la vida",
       bookText:
         "“... muchas personas perciben que sus características corporales no necesariamente tienen que ver con el género con el que se perciben. Los tratamientos hormonales permiten a las personas transgénero poner en acuerdo su identidad de género autopercibida con estas características corporales.”"
@@ -216,7 +220,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "El final",
       book: "Libro de la muerte",
       bookText:
         "“Entonces, me explica aquello que ya conté: que hoy las personas tienen más miedo a ser enterradas vivas que a morirse. Por ello, muchos piden ser enterrados con el celular…”"
@@ -245,7 +250,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Abismo",
       book: "Libro de la muerte",
       bookText:
         "“Se cree que el moribundo aguardaba en silencio, como quien espera una noticia importante e inevitable. Alrededor quedaban los que estuviesen. Siempre mucha gente: principalmente conocidos, pero también los había desconocidos.”"
@@ -275,7 +281,8 @@ const preSteps: PreStep[] = [
         }
       }
     ],
-    postAnswerFeedback: {
+    extraData: {
+      tabName: "Interrupción del viaje",
       book: "Libro de la muerte",
       bookText:
         "“...la soberanía sobre los cuerpos y, más aún, sobre las existencias, es algo que no puede conquistarse tan fácil. Pero los deseos de la Interrupción Voluntaria de la Vida comienzan a ser identificados y reconocidos por los Estados, que toman nota de la situación y, en algunos casos, ensayan leyes para garantizar nuevos derechos.”"

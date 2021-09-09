@@ -30,9 +30,9 @@ type ButtonGroup = Input & {
 };
 
 type CheckboxGroup = Input & {
-  type: 'checkbox',
-  options: Option[]
-}
+  type: "checkbox";
+  options: Option[];
+};
 
 type NumericInput = Input & {
   type: "numeric-input";
@@ -56,10 +56,11 @@ export interface PreStep {
   step: number;
   key: string;
   questions: Question[];
-  postAnswerFeedback: {
+  extraData: {
     book: "Libro de la vida" | "Libro de la muerte";
     bookText: string;
-  }
+    tabName: string;
+  };
 }
 
 export interface Step extends PreStep {

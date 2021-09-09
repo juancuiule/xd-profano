@@ -17,4 +17,16 @@ body,
   background: var(--gray-1);
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hideScrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
