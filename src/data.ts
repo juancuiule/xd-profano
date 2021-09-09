@@ -1,78 +1,7 @@
 import * as Yup from "yup";
-import Lazy from "yup/lib/Lazy";
-import { RequiredNumberSchema } from "yup/lib/number";
-import { AssertsShape, Assign, TypeOfShape } from "yup/lib/object";
-import Reference from "yup/lib/Reference";
-import { RequiredStringSchema } from "yup/lib/string";
+import { PreStep, Step, SubSchema } from "./types";
 
-type Input = {
-  label: string;
-};
-
-type SliderInput = Input & {
-  type: "slider";
-  minLabel: string;
-  maxLabel: string;
-  min?: number;
-  max?: number;
-  defaultValue?: number;
-};
-
-type Option = {
-  text: string;
-  value: string;
-};
-
-type ButtonGroup = Input & {
-  type: "button";
-  options: Option[];
-  direction?: "column" | "row";
-};
-
-type NumericInput = Input & {
-  type: "numeric-input";
-  min?: number;
-  max?: number;
-};
-
-type Question = {
-  key: string;
-  input: SliderInput | ButtonGroup | NumericInput;
-  condition?: (state: Record<string, string | number>) => boolean;
-};
-
-type SubSchema =
-  | RequiredNumberSchema<number | undefined, Record<string, any>>
-  | RequiredStringSchema<string | undefined, Record<string, any>>
-  | Yup.NumberSchema<number | undefined, Record<string, any>>
-  | Yup.StringSchema<string | undefined, Record<string, any>>;
-
-export type Step = {
-  step: number;
-  key: string;
-  questions: Question[];
-  validationSchema?: Yup.ObjectSchema<
-    Assign<
-      Record<
-        string,
-        Yup.AnySchema<any, any, any> | Reference<unknown> | Lazy<any, any>
-      >,
-      { [key: string]: SubSchema }
-    >,
-    Record<string, any>,
-    TypeOfShape<{
-      [x: string]:
-        | Yup.AnySchema<any, any, any>
-        | Reference<unknown>
-        | Lazy<any, any>;
-    }>,
-    AssertsShape<Record<any, any>>
-  >;
-  book: "Libro de la vida" | "Libro de la muerte";
-  bookText: string;
-};
-
-const getSchema = (step: Step) => {
+const getSchema = (step: PreStep) => {
   const shape = step.questions.reduce(
     (acum, { input, key, condition }) => {
       const schemaKey = `${step.key}-${key}`;
@@ -135,25 +64,36 @@ const getSchema = (step: Step) => {
   return Yup.object().shape(shape);
 };
 
-export const STEPS: Step[] = ([
+const preSteps: PreStep[] = [
   {
     step: 1,
-    key: "genero",
+    key: "edad",
     questions: [
       {
-        key: "coincide",
+        key: "actual",
         input: {
+          type: "numeric-input",
+          label: "¿Qué edad tenés?",
+          min: 0
+        }
+      },
+      {
+        key: "morir",
+        input: {
+          label: "¿Hasta qué edad te gustaría vivir?",
           type: "slider",
-          label:
-            "¿En qué medida el género que te asignaron al nacer coincide con el que te autopercibís?",
-          minLabel: "Nada",
-          maxLabel: "Totalmente"
+          min: 0,
+          max: 130,
+          minLabel: "0 años",
+          maxLabel: "130 años"
         }
       }
     ],
-    book: "Libro de la vida",
-    bookText:
-      "“...durante la pubertad se hacen presentes ciertos cambios físicos. Pero muchas personas perciben que esas características corporales no necesariamente tienen que ver con el género con el que se perciben. Los tratamientos hormonales permiten a las personas transgénero poner en acuerdo su identidad de género autopercibida con estas características corporales.” Libro de la vida"
+    postAnswerFeedback: {
+      book: "Libro de la vida",
+      bookText:
+        "“...es imposible conocer el límite máximo de tiempo vivible para los humanos. Lo único que sabemos es que estas personas excepcionales que viven más de 110 años dificilmente llegan a los 120: ese parece ser un límite más o menos razonable.”"
+    }
   },
   {
     step: 2,
@@ -191,9 +131,11 @@ export const STEPS: Step[] = ([
         condition: (state) => state["hijes-tenes"] === "0"
       }
     ],
-    book: "Libro de la vida",
-    bookText:
-      "“...Si nacer es uno de los hitos centrales en las trayectorias de vida de los humanos, dar lugar a ese nacimiento —es decir, transitar el parto y lo que le sigue— no se queda muy atrás…”"
+    postAnswerFeedback: {
+      book: "Libro de la vida",
+      bookText:
+        "“...Si nacer es uno de los hitos centrales en las trayectorias de vida de los humanos, dar lugar a ese nacimiento —es decir, transitar el parto y lo que le sigue— no se queda muy atrás…”"
+    }
   },
   {
     step: 3,
@@ -224,40 +166,93 @@ export const STEPS: Step[] = ([
         }
       }
     ],
-    book: "Libro de la vida",
-    bookText:
-      "“...el problema, más que por la definición del inicio de la vida, podía ser abordado en términos del estatus de un embrión o feto frente al de una persona, es decir, un ser humano.”"
+    postAnswerFeedback: {
+      book: "Libro de la vida",
+      bookText:
+        "“...el problema, más que por la definición del inicio de la vida, podía ser abordado en términos del estatus de un embrión o feto frente al de una persona, es decir, un ser humano.”"
+    }
   },
   {
     step: 4,
-    key: "edad",
+    key: "genero",
     questions: [
       {
-        key: "actual",
+        key: "coincide",
         input: {
-          type: "numeric-input",
-          label: "¿Qué edad tenés?",
-          min: 0
-        }
-      },
-      {
-        key: "morir",
-        input: {
-          label: "¿Hasta qué edad te gustaría vivir?",
           type: "slider",
-          min: 0,
-          max: 130,
-          minLabel: "0 años",
-          maxLabel: "130 años"
+          label:
+            "¿En qué medida el género que te asignaron al nacer coincide con el que te autopercibís?",
+          minLabel: "Nada",
+          maxLabel: "Totalmente"
         }
       }
     ],
-    book: "Libro de la vida",
-    bookText:
-      "“...es imposible conocer el límite máximo de tiempo vivible para los humanos. Lo único que sabemos es que estas personas excepcionales que viven más de 110 años dificilmente llegan a los 120: ese parece ser un límite más o menos razonable.”"
+    postAnswerFeedback: {
+      book: "Libro de la vida",
+      bookText:
+        "“... muchas personas perciben que sus características corporales no necesariamente tienen que ver con el género con el que se perciben. Los tratamientos hormonales permiten a las personas transgénero poner en acuerdo su identidad de género autopercibida con estas características corporales.”"
+    }
   },
   {
     step: 5,
+    key: "morir",
+    questions: [
+      {
+        key: "curpo",
+        input: {
+          label: "¿Te interesa que pase con tu cuerpo luego de morir? ",
+          type: "slider",
+          minLabel: "Nada",
+          maxLabel: "Mucho"
+        }
+      },
+      {
+        key: "redes",
+        input: {
+          label: "¿Te interesa qué pase con tus redes sociales luego de morir?",
+          type: "slider",
+          minLabel: "Nada",
+          maxLabel: "Mucho"
+        }
+      }
+    ],
+    postAnswerFeedback: {
+      book: "Libro de la muerte",
+      bookText:
+        "“Entonces, me explica aquello que ya conté: que hoy las personas tienen más miedo a ser enterradas vivas que a morirse. Por ello, muchos piden ser enterrados con el celular…”"
+    }
+  },
+  {
+    step: 6,
+    key: "miedo",
+    questions: [
+      {
+        key: "propia",
+        input: {
+          label: "¿Cuánto miedo le tenés a la muerte?",
+          type: "slider",
+          minLabel: "Nada",
+          maxLabel: "Mucho"
+        }
+      },
+      {
+        key: "resto",
+        input: {
+          label: "¿Cuánto miedo le tenés a la muerte de les demás?",
+          type: "slider",
+          minLabel: "Nada",
+          maxLabel: "Mucho"
+        }
+      }
+    ],
+    postAnswerFeedback: {
+      book: "Libro de la muerte",
+      bookText:
+        "“Se cree que el moribundo aguardaba en silencio, como quien espera una noticia importante e inevitable. Alrededor quedaban los que estuviesen. Siempre mucha gente: principalmente conocidos, pero también los había desconocidos.”"
+    }
+  },
+  {
+    step: 7,
     key: "muerte",
     questions: [
       {
@@ -280,35 +275,15 @@ export const STEPS: Step[] = ([
         }
       }
     ],
-    book: "Libro de la muerte",
-    bookText:
-      "“...la soberanía sobre los cuerpos y, más aún, sobre las existencias, es algo que no puede conquistarse tan fácil. Pero los deseos de la Interrupción Voluntaria de la Vida comienzan a ser identificados y reconocidos por los Estados, que toman nota de la situación y, en algunos casos, ensayan leyes para garantizar nuevos derechos.”"
-  },
-  {
-    step: 6,
-    key: "morir",
-    questions: [
-      {
-        key: "curpo",
-        input: {
-          label: "¿Te interesa que pase con tu cuerpo luego de morir? ",
-          type: "slider",
-          minLabel: "Nada",
-          maxLabel: "Mucho"
-        }
-      },
-      {
-        key: "redes",
-        input: {
-          label: "¿Te interesa qué pase con tus redes sociales luego de morir?",
-          type: "slider",
-          minLabel: "Nada",
-          maxLabel: "Mucho"
-        }
-      }
-    ],
-    book: "Libro de la muerte",
-    bookText:
-      "“Entonces, me explica aquello que ya conté: que hoy las personas tienen más miedo a ser enterradas vivas que a morirse. Por ello, muchos piden ser enterrados con el celular…”"
+    postAnswerFeedback: {
+      book: "Libro de la muerte",
+      bookText:
+        "“...la soberanía sobre los cuerpos y, más aún, sobre las existencias, es algo que no puede conquistarse tan fácil. Pero los deseos de la Interrupción Voluntaria de la Vida comienzan a ser identificados y reconocidos por los Estados, que toman nota de la situación y, en algunos casos, ensayan leyes para garantizar nuevos derechos.”"
+    }
   }
-] as Step[]).map((step) => ({ ...step, validationSchema: getSchema(step) }));
+];
+
+export const STEPS: Step[] = preSteps.map((step) => ({
+  ...step,
+  validationSchema: getSchema(step)
+}));

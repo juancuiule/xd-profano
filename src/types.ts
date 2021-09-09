@@ -29,6 +29,11 @@ type ButtonGroup = Input & {
   direction?: "column" | "row";
 };
 
+type CheckboxGroup = Input & {
+  type: 'checkbox',
+  options: Option[]
+}
+
 type NumericInput = Input & {
   type: "numeric-input";
   min?: number;
@@ -37,11 +42,11 @@ type NumericInput = Input & {
 
 type Question = {
   key: string;
-  input: SliderInput | ButtonGroup | NumericInput;
+  input: SliderInput | ButtonGroup | NumericInput | CheckboxGroup;
   condition?: (state: Record<string, string | number>) => boolean;
 };
 
-type SubSchema =
+export type SubSchema =
   | RequiredNumberSchema<number | undefined, Record<string, any>>
   | RequiredStringSchema<string | undefined, Record<string, any>>
   | Yup.NumberSchema<number | undefined, Record<string, any>>
@@ -51,8 +56,10 @@ export interface PreStep {
   step: number;
   key: string;
   questions: Question[];
-  book: "Libro de la vida" | "Libro de la muerte";
-  bookText: string;
+  postAnswerFeedback: {
+    book: "Libro de la vida" | "Libro de la muerte";
+    bookText: string;
+  }
 }
 
 export interface Step extends PreStep {
